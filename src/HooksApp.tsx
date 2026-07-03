@@ -3,7 +3,9 @@
 const HooksApp = () => {
   return (
     <>
-        <h1>Hola Mundo</h1>
+        <div className="bg-gradient">
+          <h1 className="font-semibold">Hola Mundo</h1>
+        </div>
     </>
   )
 }
