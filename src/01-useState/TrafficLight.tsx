@@ -5,20 +5,31 @@ const colors = {
     red: 'bg-red-500 animate-pulse',
     yellow: 'bg-yellow-500 animate-pulse',
     green: 'bg-green-500 animate-pulse',
+    blue: 'bg-blue-500 animate-pulse',
     default: 'bg-gray-500'
 }
 
 const TrafficLight = () => {
 
-    const [light, setLight] =  useState('red');
+    //**************************************************** Types ********/
 
-    const handlerColorChange = ( color:string)=>{
+      //  type TrafficLightColor = 'red' | 'yellow'  |'green'|'blue';
 
-        setLight((prev)=>{
-            console.log({prev})
-            return color
-        })
-    }
+        type TrafficLightColor = keyof typeof colors;
+
+    //**************************************************** Variables de estado ********/
+
+        const [light, setLight] =  useState<TrafficLightColor>('red');
+
+    //**************************************************** Métodos ********/
+
+        const handlerColorChange = ( color:TrafficLightColor)=>{
+
+            setLight((prev)=>{
+                console.log({prev})
+                return color
+            })
+        }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 flex items-center justify-center p-4">
