@@ -9,13 +9,13 @@ const colors = {
     default: 'bg-gray-500'
 }
 
+//**************************************************** Types ********/
+
+ //  type TrafficLightColor = 'red' | 'yellow'  |'green'|'blue';
+
+type TrafficLightColor = keyof typeof colors;
+
 const TrafficLight = () => {
-
-    //**************************************************** Types ********/
-
-      //  type TrafficLightColor = 'red' | 'yellow'  |'green'|'blue';
-
-        type TrafficLightColor = keyof typeof colors;
 
     //**************************************************** Variables de estado ********/
 
