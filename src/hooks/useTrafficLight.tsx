@@ -54,9 +54,19 @@ const useTrafficLight = () => {
          },[countDown, light])
         
   return {
-    light,
-    countDown,
-    colors
+    //props
+        light,
+        countDown,
+        colors,
+
+    //Computed: properties que se calculan en el momento
+
+        percentage: (countDown/5)*100 ,
+
+        redLight:    light==="red"? colors[light] : colors.default,
+        yellowLight: light==="yellow"? colors[light] : colors.default,
+        greenLight:  light==="green"? colors[light] : colors.default
+
   }
 }
 
