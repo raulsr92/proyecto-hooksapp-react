@@ -13,16 +13,18 @@ interface Props{
 const usePokemon = ({id}:Props) => {
 
     //**************************************************** Hook: useState (variables de estado) ********/
-
     const [pokemon, setPokemon] = useState<Pokemon | null>(null)
 
-    //**************************************************** Métodos ********/
+    const [isLoading, setIsLoading] = useState(true)
 
+    //**************************************************** Métodos ********/
     const getPokemonById = async(id: number)=>{
 
-        const response = await fetch('https://pokeapi.co/api/v2/pokemon/1')
+        setIsLoading(true)
 
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
         const data = await response.json();
+        console.log(data)
 
         setPokemon(
             {
@@ -32,20 +34,25 @@ const usePokemon = ({id}:Props) => {
             }
         )
 
+        setIsLoading(false)
     }
 
-    
     //**************************************************** Hook: useEffect (efectos) ********/
 
     //✈ ✈ ✈ ✈ ✈ ✈ ✈ ✈ ✈ ✈ ✈ ✈ ✈ Efecto 1: Petición HTTP  ✈ ✈ ✈ ✈/
         useEffect( ()=>{
 
-         },[])
+            getPokemonById(id)
+
+         },[id])
 
 
   return {
     //Properties
+    isLoading,
     pokemon, 
+
+    formattedId: id.toString().padStart(3, "0"),
   }
 }
 
