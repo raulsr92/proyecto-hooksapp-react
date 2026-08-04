@@ -19,22 +19,55 @@ export const TasksApp = () => {
   const [inputValue, setInputValue] = useState('');
 
   const addTodo = () => {
-    console.log('Agregar tarea', inputValue);
+    console.log('Agregando tarea:', inputValue);
+
+    if (inputValue.length===0) return
+
+    const newTodo:Todo = {
+      id: Date.now(),
+      text: inputValue.trim(),
+      completed: false
+    }
+
+    setTodos(todos => [...todos, newTodo])
+    //setTodos((prev)=>[...prev, newTodo])
+
+    setInputValue('');
 
   };
 
-  const toggleTodo = (id: number) => {
-    console.log('Cambiar de true a false', id);
 
+  const toggleTodo = (id: number) => {
+    //console.log('Cambiar de true a false', id);
+    
+    const updatedArray = todos.map((tarea)=>{
+      if (tarea.id === id) {
+          return{
+              ...tarea,
+              completed: !tarea.completed
+            }
+      } else{
+        return tarea
+      }
+    })
+
+    setTodos(updatedArray)
   };
 
   const deleteTodo = (id: number) => {
-    console.log('Eliminar tarea', id);
+    
+    const updatedArray  = todos.filter((tarea)=> tarea.id !== id)
 
+    setTodos(updatedArray);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    console.log('Presiono enter');
+    console.log({key: e.key})
+    
+    if (e.key === 'Enter') {
+
+      addTodo();
+    }
 
   };
 
