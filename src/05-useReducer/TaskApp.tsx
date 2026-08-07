@@ -18,13 +18,7 @@ export const TasksApp = () => {
 
     if (inputValue.length===0) return
 
-    const newTodo:Todo = {
-      id: Date.now(),
-      text: inputValue.trim(),
-      completed: false
-    }
 
-    setTodos(todos => [...todos, newTodo])
     //setTodos((prev)=>[...prev, newTodo])
 
     setInputValue('');
@@ -35,18 +29,8 @@ export const TasksApp = () => {
   const toggleTodo = (id: number) => {
     //console.log('Cambiar de true a false', id);
 
-    const updatedArray = todos.map((tarea)=>{
-      if (tarea.id === id) {
-          return{
-              ...tarea,
-              completed: !tarea.completed
-            }
-      } else{
-        return tarea
-      }
-    })
+    
 
-    setTodos(updatedArray)
   };
 
   const deleteTodo = (id: number) => {
