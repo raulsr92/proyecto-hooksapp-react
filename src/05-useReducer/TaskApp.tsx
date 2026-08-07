@@ -8,11 +8,6 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-interface Todo {
-  id: number;
-  text: string;
-  completed: boolean;
-}
 
 export const TasksApp = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -39,7 +34,7 @@ export const TasksApp = () => {
 
   const toggleTodo = (id: number) => {
     //console.log('Cambiar de true a false', id);
-    
+
     const updatedArray = todos.map((tarea)=>{
       if (tarea.id === id) {
           return{
