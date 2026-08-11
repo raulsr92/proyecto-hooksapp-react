@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useReducer } from 'react';
 
 import { Plus, Trash2, Check } from 'lucide-react';
 
@@ -7,51 +7,65 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getTasksInitialState, taskReducer } from './reducer/taskReducer';
 
 
 export const TasksApp = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+
+  //const [todos, setTodos] = useState<Todo[]>([]);
+
   const [inputValue, setInputValue] = useState('');
+  const [state, dispatch]=useReducer(taskReducer, getTasksInitialState())
 
-  const addTodo = () => {
-    console.log('Agregando tarea:', inputValue);
+  //Métodos de Acciones
 
-    if (inputValue.length===0) return
+    const addTodo = () => {
 
+      console.log('Agregando tarea:', inputValue);
 
-    //setTodos((prev)=>[...prev, newTodo])
+      if (inputValue.length===0) return
 
-    setInputValue('');
+      //Llamada al dispatcher del useReducer 
 
-  };
+        dispatch({type:'ADD_TODO',payload:inputValue})
 
+      //setTodos((prev)=>[...prev, newTodo])
 
-  const toggleTodo = (id: number) => {
-    //console.log('Cambiar de true a false', id);
+      //Limpiar el input donde se ingresa la tarea
+        setInputValue('');
+    };
 
-    
+    const toggleTodo = (id: number) => {
+      //console.log('Cambiar de true a false', id);
 
-  };
+      dispatch({type:'TOGGLE_TODO',payload:id})
+      
 
-  const deleteTodo = (id: number) => {
-    
-    const updatedArray  = todos.filter((tarea)=> tarea.id !== id)
+    };
 
-    setTodos(updatedArray);
-  };
+    const deleteTodo = (id: number) => {
+      
+      //const updatedArray  = todos.filter((tarea)=> tarea.id !== id)
+      //setTodos(updatedArray);
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    console.log({key: e.key})
-    
-    if (e.key === 'Enter') {
+      dispatch({type:'DELETE_TODO', payload:id})
 
-      addTodo();
-    }
+    };
 
-  };
+    const handleKeyPress = (e: React.KeyboardEvent) => {
+      console.log({key: e.key})
+      
+      if (e.key === 'Enter') {
 
-  const completedCount = todos.filter((todo) => todo.completed).length;
-  const totalCount = todos.length;
+        addTodo();
+      }
+
+    };
+
+  const {todo:todos, length:totalCount, completed:completedCount} = state;
+
+  //const completedCount = todos.filter((todo) => todo.completed).length;
+  //const totalCount = todos.length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">

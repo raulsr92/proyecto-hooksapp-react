@@ -1,21 +1,37 @@
 
-interface Todo {
-  id: number;
-  text: string;
-  completed: boolean;
-}
+//Interfaces
 
-interface TaskState{
-    todo: Todo[],
-    length: number,
-    completed: number,
-    pending: number
-}
+    interface Todo {
+    id: number;
+    text: string;
+    completed: boolean;
+    }
 
-export type TaskAction = 
-    |{ type: 'ADD_TODO', payload: string}
-    |{ type: 'TOGGLE_TODO', payload: number}
-    |{ type: 'DELETE_TODO', payload: number}
+    interface TaskState{
+        todo: Todo[],
+        length: number,
+        completed: number,
+        pending: number
+    }
+
+//Types
+
+    export type TaskAction = 
+        |{ type: 'ADD_TODO', payload: string}
+        |{ type: 'TOGGLE_TODO', payload: number}
+        |{ type: 'DELETE_TODO', payload: number}
+
+//Estado inicial
+
+    export const getTasksInitialState = ():TaskState=>{
+
+        return {
+            todo: [],
+            length:0,
+            completed:0,
+            pending:0
+        }
+    }
 
 export const taskReducer = (state:TaskState, action:TaskAction):TaskState=>{
 
