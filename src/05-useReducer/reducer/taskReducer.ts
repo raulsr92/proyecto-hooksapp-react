@@ -25,13 +25,23 @@
 
     export const getTasksInitialState = ():TaskState=>{
 
-        return {
-            todo: [],
-            length:0,
-            completed:0,
-            pending:0
+        //Traer listado de tareas de local storage
+
+        const localStorageState = localStorage.getItem("tasks-state")
+
+        if (!localStorageState) {
+            return {
+                todo: [],
+                length:0,
+                completed:0,
+                pending:0
+            }
         }
+
+        return JSON.parse(localStorageState)
+
     }
+
 
 export const taskReducer = (state:TaskState, action:TaskAction):TaskState=>{
 
