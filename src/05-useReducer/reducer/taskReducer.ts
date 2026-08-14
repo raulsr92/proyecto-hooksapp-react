@@ -1,3 +1,4 @@
+import * as z from "zod";
 
 //Interfaces
 
@@ -21,24 +22,60 @@
         |{ type: 'TOGGLE_TODO', payload: number}
         |{ type: 'DELETE_TODO', payload: number}
 
+//Definir esquema de validación ZOD
+
+    const TodoSchema = z.object(
+        {
+            id:z.number(),
+            text: z.string(),
+            completed: z.boolean()
+        }
+    )
+
+    const TaskStateSchema = z.object(
+        {
+            todo: z.array(TodoSchema),
+            length: z.number(),
+            completed: z.number(),
+            pending: z.number()
+        }
+    )
+
 //Estado inicial
 
     export const getTasksInitialState = ():TaskState=>{
 
-        //Traer listado de tareas de local storage
+        //Traer listado de tareas de local storage:
 
-        const localStorageState = localStorage.getItem("tasks-state")
+            const localStorageState = localStorage.getItem("tasks-state")
 
-        if (!localStorageState) {
-            return {
-                todo: [],
-                length:0,
-                completed:0,
-                pending:0
-            }
-        }
+            // Si está vacío:
 
-        return JSON.parse(localStorageState)
+                if (!localStorageState) {
+                    return {
+                        todo: [],
+                        length:0,
+                        completed:0,
+                        pending:0
+                    }
+                }
+
+            //Si hay data: Validar mediante ZOD
+
+                const result = TaskStateSchema.safeParse(JSON.parse(localStorageState))
+
+                if(result.error){
+                    console.log(result.error)
+
+                    return {
+                        todo: [],
+                        length:0,
+                        completed:0,
+                        pending:0
+                    }
+                }
+
+                return result.data
 
     }
 
