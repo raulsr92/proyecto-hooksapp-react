@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { SkipForward, Play } from 'lucide-react';
+import confetti from 'canvas-confetti';
 
 const GAME_WORDS = [
   'REACT',
@@ -30,7 +31,7 @@ const GAME_WORDS = [
 
 // Esta función mezcla el arreglo para que siempre sea aleatorio
 const shuffleArray = (array: string[]) => {
-  return array.sort(() => Math.random() - 0.5);
+  return [...array].sort(() => Math.random() - 0.5);
 };
 
 // Esta función mezcla las letras de la palabra
@@ -56,35 +57,13 @@ export const ScrambleWords = () => {
     const [maxSkips, setMaxSkips] = useState(3);
     const [isGameOver, setIsGameOver] = useState(false);
 
-  //Efectos (hook useEffect)
-  
-    useEffect(() => {
-
-      setCurrentWord(words[0]);
-      setScrambledWord(scrambleWord(words[0]));
-
-    }, [words]);
-
-
-    useEffect(() => {
-      console.log("En efecto de game over")
-
-      if (errorCounter>2) {
-        setIsGameOver(true)
-        console.log(words)
-      }
-
-      if(errorCounter===0){
-        setIsGameOver(false)
-      }
-      
-
-    }, [errorCounter]);
-
 
   const showNextWord = ()=>{
 
-    setWords( words => words.slice(1));
+    const newWords = words.slice(1)
+    setWords( newWords);
+    setCurrentWord(newWords[0])
+    setScrambledWord(scrambleWord(newWords[0]))
 
   }   
 
@@ -95,17 +74,20 @@ export const ScrambleWords = () => {
       console.log('Intento de adivinanza:', guess, currentWord);
 
     //Código(
-      
-      console.log(words)
-
-      if (currentWord==guess) {
-
+      if (currentWord===guess) {
         console.log("Ha adivinado la palabra")
+
+        //Lanzar confetti
+          confetti({
+            particleCount:300,
+            spread: 120,
+            origin: { y:0.6 }
+          })
+
         //Sumar puntos 
           setPoints( prev => prev+1 )
 
         //Bloquea Botón vaciando caja de texto
-
           setGuess("")
         
         //Mostrar la siguiente palabra
@@ -114,25 +96,33 @@ export const ScrambleWords = () => {
       } else{
         console.log("😫")
         //Sumar ERROR 
-
           setErrorCounter( prev => prev+1 )
 
         //Bloquea Botón vaciando caja de texto
+          setGuess("")    
+          
+        //Indicar que se acabó el juego
 
-          setGuess("")      
-
-        
+        if (errorCounter+1>=maxAllowErrors) {
+          setIsGameOver(true)
+        }
       }
-
   };
 
   const handleSkip = () => {
 
-    console.log('Palabra saltada');
+    if (skipCounter >= maxSkips) {
+      console.log('Ya no puedo realizar más saltos');
+      return;
+    }
 
     setSkipCounter(prev => prev +1)
 
     showNextWord()
+
+    //Vaciar caja de texto
+      
+      setGuess("")
 
   };
 
@@ -143,11 +133,18 @@ export const ScrambleWords = () => {
     setSkipCounter(0);
     setErrorCounter(0);
 
+    //Vaciar caja de texto  
+    setGuess("")
+
     //Reiniciar array
 
-    setWords(shuffleArray(GAME_WORDS))
+    const restartWords = shuffleArray(GAME_WORDS)
+    setWords(restartWords)
+    setCurrentWord(restartWords[0])
+    setScrambledWord(scrambleWord(restartWords[0]))
 
-    console.log(words)
+    setIsGameOver(false)
+
   };
 
   //! Si ya no hay palabras para jugar, se muestra el mensaje de fin de juego
@@ -274,6 +271,7 @@ export const ScrambleWords = () => {
                 <SkipForward className="w-4 h-4" />
                 Saltar ({skipCounter} / {maxSkips})
               </Button>
+
               <Button
                 onClick={handlePlayAgain}
                 variant="outline"
@@ -293,6 +291,8 @@ export const ScrambleWords = () => {
             <br />
             <br />
             {words.join(', ')}
+            <br />
+            <span className='font-semibold'>({words.length})</span>
           </p>
         </div>
       </div>
