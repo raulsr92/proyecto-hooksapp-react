@@ -20,7 +20,9 @@
     export type ScrambledWordsAction = 
     |{ type: 'SET_GUESS', payload: string }
     |{ type: 'CHECK_ANSWER'}
-    |{ type: 'Falta definir'}
+    |{ type: 'SKIP_WORD'}
+    |{ type: 'START_NEW_GAME', payload: ScrambleWordsState}
+
 
 // Array principal del juego
 
@@ -61,15 +63,6 @@
             .join('');
         };
 
-
-        const showNextWord = ()=>{
-
-            const newWords = words.slice(1)
-            setWords( newWords);
-            setCurrentWord(newWords[0])
-            setScrambledWord(scrambleWord(newWords[0]))
-
-        } 
 
 // Estado Inicial
 
@@ -125,15 +118,32 @@ export const scrambleWordReducer = (state:ScrambleWordsState, action:ScrambledWo
                 ...state,
                 errorCounter: state.errorCounter + 1,
                 guess: "",
-                isGameOver: (state.errorCounter +1) >= state.maxAllowErrors 
+                isGameOver: (state.errorCounter +1) >= state.maxAllowErrors
             }
             
         };
 
-        case value:
-            
-            return state;
+        case 'SKIP_WORD':{
 
+            if (state.skipCounter>=state.maxSkips) {
+                return state
+            }
+
+            const newWords = state.words.slice(1);
+            return {
+                ...state,
+                skipCounter: state.skipCounter + 1,
+                guess: "",
+                words: newWords,
+                currentWord: newWords[0],
+                scrambledWord: scrambleWord(newWords[0])
+            };                
+            
+
+        }
+        case 'START_NEW_GAME':
+            return action.payload;
+        
         default:
             return state;
     }
