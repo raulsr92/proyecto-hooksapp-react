@@ -18,8 +18,8 @@
 //Types
 
     export type ScrambledWordsAction = 
-    |{ type: 'Falta definir'}
-    |{ type: 'Falta definir'}
+    |{ type: 'SET_GUESS', payload: string }
+    |{ type: 'CHECK_ANSWER'}
     |{ type: 'Falta definir'}
 
 // Array principal del juego
@@ -98,13 +98,37 @@
 export const scrambleWordReducer = (state:ScrambleWordsState, action:ScrambledWordsAction):ScrambleWordsState=>{
 
     switch (action.type) {
-        case value:
+        case 'SET_GUESS':
             
-            return state;
+            return {
+                ...state,
+                guess: action.payload.trim().toUpperCase()
+            };
+        
+        case 'CHECK_ANSWER':{
 
-        case value:
+            if(state.currentWord === state.guess){
+
+                const newWords = state.words.slice(1);
+
+                return {
+                    ...state,
+                    points: state.points + 1,
+                    guess: "",
+                    words: newWords,
+                    currentWord: newWords[0],
+                    scrambledWord: scrambleWord(newWords[0])
+                }
+            }
+
+            return{
+                ...state,
+                errorCounter: state.errorCounter + 1,
+                guess: "",
+                isGameOver: (state.errorCounter +1) >= state.maxAllowErrors 
+            }
             
-            return state;
+        };
 
         case value:
             

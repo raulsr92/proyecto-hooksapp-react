@@ -72,11 +72,9 @@ export const ScrambleWords = () => {
       e.preventDefault();
     // Implementar lógica de juego
       console.log('Intento de adivinanza:', guess, currentWord);
-
     //Código(
       if (currentWord===guess) {
         console.log("Ha adivinado la palabra")
-
         //Lanzar confetti
           confetti({
             particleCount: 300,
@@ -87,10 +85,8 @@ export const ScrambleWords = () => {
 
         //Sumar puntos 
           setPoints( prev => prev+1 )
-
         //Bloquea Botón vaciando caja de texto
-          setGuess("")
-        
+          setGuess("") 
         //Mostrar la siguiente palabra
          showNextWord() 
          

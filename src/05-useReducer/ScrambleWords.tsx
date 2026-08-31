@@ -54,38 +54,13 @@ export const ScrambleWords = () => {
       e.preventDefault();
     // Implementar lógica de juego
       console.log('Intento de adivinanza:', guess, currentWord);
-    /*
-    //Código(
-      if (currentWord===guess) {
-        console.log("Ha adivinado la palabra")
-        //Lanzar confetti
-          confetti({
-            particleCount: 300,
-            spread:120,
-            origin: { y:0.6 }});
-        //Sumar puntos 
-          setPoints( prev => prev+1 )
-        //Bloquea Botón vaciando caja de texto
-          setGuess("")
-        //Mostrar la siguiente palabra
-         showNextWord() 
-         
-      } else{
-        console.log("😫")
-        //Sumar ERROR 
-          setErrorCounter( prev => prev+1 )
 
-        //Bloquea Botón vaciando caja de texto
-          setGuess("")    
-          
-        //Indicar que se acabó el juego
+    // Mandar el dispatcher de la acción
 
-        if (errorCounter+1>=maxAllowErrors) {
-          setIsGameOver(true)
-        }
-      }
-      */
+      dispatch({type:'CHECK_ANSWER'})
+
   };
+  
 
   const handleSkip = () => {
 
@@ -210,6 +185,9 @@ export const ScrambleWords = () => {
                     onChange={(e) =>{
                       //setGuess(e.target.value.toUpperCase().trim())
                       console.log(e.target.value)
+
+                      dispatch({type:'SET_GUESS', payload: e.target.value})
+                      
                     }}
                     placeholder="Ingresa tu palabra..."
                     className="text-center text-lg font-semibold h-12 border-2 border-indigo-200 focus:border-indigo-500 transition-colors"
