@@ -2,12 +2,12 @@
 // Es necesario componentes de Shadcn/ui
 // https://ui.shadcn.com/docs/installation/vite
 
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { SkipForward, Play } from 'lucide-react';
-//import confetti from 'canvas-confetti';
+import confetti from 'canvas-confetti';
 import {  getInitialState, scrambleWordReducer } from './reducer/scrambleWordReducer';
 
 
@@ -15,11 +15,9 @@ import {  getInitialState, scrambleWordReducer } from './reducer/scrambleWordRed
 export const ScrambleWords = () => {
 
   // Hook useReducer
-
     const [state, dispatch]=useReducer(scrambleWordReducer,getInitialState())
   
   // Desestructurar propiedades del state
-
     const {
       words, 
       currentWord, 
@@ -34,6 +32,21 @@ export const ScrambleWords = () => {
       totalWords 
     } = state
 
+  // Hook useReducer
+
+    useEffect(()=>{
+      if (points===0) return
+
+      //Lanzar confetti
+          confetti({
+            particleCount: 300,
+            spread:120,
+            origin: { y:0.6 }
+          });
+
+    },[points])
+
+  // Métodos
 
   const handleGuessSubmit = (e: React.FormEvent) => {
     // Previene el refresh de la página
