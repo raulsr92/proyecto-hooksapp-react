@@ -1,18 +1,15 @@
+import React from "react"
 
 //Interfaces
-
 interface Props{
-
     title:string
 }
 
-
 //Componente 
 
-const MyTitle = ({title}:Props) => {
+const MyTitle = React.memo(({title}:Props) => {
 
   console.log("My title re-render")
-
 
   return (
 
@@ -20,6 +17,6 @@ const MyTitle = ({title}:Props) => {
             {title}
         </h1>
   )
-}
+})
 
 export default MyTitle
