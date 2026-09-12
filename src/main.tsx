@@ -8,9 +8,10 @@ import { createRoot } from 'react-dom/client'
 //import FocusScreen from './04-useRef/FocusScreen'
 //import { TasksApp } from './05-useReducer/TaskApp'
 //import { ScrambleWords } from './05-useReducer/ScrambleWords'
+//import MemoHook from './06-memos/MemoHook'
 
 import './index.css'
-import MemoHook from './06-memos/MemoHook'
+import MemoCounter from './06-memos/MemoCounter'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -23,7 +24,8 @@ createRoot(document.getElementById('root')!).render(
     {/*<FocusScreen/>*/}
     {/*<TasksApp/>*/}
     {/*<ScrambleWords/>*/}
-    <MemoHook/>
+    {/*<MemoHook/>*/}
+    <MemoCounter/>
 
   </StrictMode>,
 )
