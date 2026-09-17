@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useOptimistic, useState } from 'react';
 
 interface Comment {
   id: number;
@@ -7,27 +7,49 @@ interface Comment {
 }
 
 export const InstagromApp = () => {
-    
-  const [comments, setComments] = useState<Comment[]>([
-    { id: 1, text: '¡Gran foto!' },
-    { id: 2, text: 'Me encanta 🧡' },
-  ]);
 
-  const handleAddComment = async (formData: FormData) => {
-    const messageText = formData.get('post-message') as string
-    console.log('Nuevo comentario', messageText);
-    await new Promise( resolve => setTimeout(resolve,3000))
-    console.log('Mensaje grabado');
+  /* ➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤ useState */  
+    const [comments, setComments] = useState<Comment[]>([
+      { id: 1, text: '¡Gran foto!' },
+      { id: 2, text: 'Me encanta 🧡' },
+    ]);
 
-    //Grabar comentario
+  /* ➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤ useOptimistic */ 
 
-      setComments( comments => [...comments,
-        {
-          id:new Date().getTime(), 
-          text: messageText
-        }
-        ])
-  };
+    const [optimisticComments, addOptimisticComment ] = useOptimistic(
+        comments, 
+        (currentComments, newComment:string)=>{
+
+          return [...currentComments, 
+            {
+              id:new Date().getTime(), 
+              text: newComment,
+              optimistic: true
+            }
+          ]
+    })
+
+
+  /* ➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤ métodos */ 
+
+
+    const handleAddComment = async (formData: FormData) => {
+      const messageText = formData.get('post-message') as string
+      
+      addOptimisticComment(messageText)
+
+      //Simular la petición http al servidor 
+        await new Promise( resolve => setTimeout(resolve,3000))
+        console.log('Mensaje grabado');
+
+      //Grabar comentario
+        setComments( comments => [...comments,
+          {
+            id:new Date().getTime(), 
+            text: messageText
+          }
+          ])
+    };
 
   return (
     <div className="bg-slate-700 h-screen flex flex-col items-center justify-center">
@@ -45,7 +67,7 @@ export const InstagromApp = () => {
 
       {/* Comentarios */}
       <ul className="flex flex-col items-start justify-center bg-gray-300 w-[500px] p-4">
-        {comments.map((comment) => (
+        {optimisticComments.map((comment) => (
           <li key={comment.id} className="flex items-center gap-2 mb-2">
             <div className="bg-blue-500 rounded-full w-10 h-10 flex items-center justify-center">
               <span className="text-white text-center">A</span>
