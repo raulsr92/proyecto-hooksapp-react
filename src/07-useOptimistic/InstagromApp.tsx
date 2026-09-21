@@ -1,4 +1,5 @@
 import { useOptimistic, useState, useTransition } from 'react';
+import { toast } from 'sonner'
 
 interface Comment {
   id: number;
@@ -45,20 +46,40 @@ export const InstagromApp = () => {
       addOptimisticComment(messageText)
 
       // Definición de acción de useTransition
-
+      
         startTransition(async()=>{
-
           //Simular la petición http al servidor 
             await new Promise( resolve => setTimeout(resolve,3000))
             console.log('Mensaje grabado');
 
           //Grabar comentario
-            setComments( comments => [...comments,
-              {
-                id:new Date().getTime(), 
-                text: messageText
+          /*
+            setComments( comments => 
+              [...comments,
+                {
+                  id:new Date().getTime(), 
+                  text: messageText
+                }
+              ]
+            )
+          */
+
+          //Este sería el código para revertir el proceso
+
+            setComments(prev => prev)
+
+          //Paquete sooner de notificaciones
+
+            toast.error("Error al agregar el comentario",{
+              description: "Intente nuevamente",
+              duration: 10_000,
+              position: 'top-right',
+              richColors: true,
+              action:{
+                label: "Cerrar",
+                onClick: ()=> toast.dismiss(),
               }
-            ])
+            })
         })
 
 
