@@ -1,4 +1,4 @@
-import { useOptimistic, useState } from 'react';
+import { useOptimistic, useState, useTransition } from 'react';
 
 interface Comment {
   id: number;
@@ -6,7 +6,13 @@ interface Comment {
   optimistic?: boolean;
 }
 
+let lastId = 2 ;
+
 export const InstagromApp = () => {
+
+  /* ➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤ useTransition */  
+
+  const [isPending, startTransition ]= useTransition()
 
   /* ➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤➤ useState */  
     const [comments, setComments] = useState<Comment[]>([
@@ -19,14 +25,14 @@ export const InstagromApp = () => {
     const [optimisticComments, addOptimisticComment ] = useOptimistic(
         comments, 
         (currentComments, newComment:string)=>{
-
-          return [...currentComments, 
-            {
-              id:new Date().getTime(), 
-              text: newComment,
-              optimistic: true
-            }
-          ]
+          lastId++
+            return [...currentComments, 
+              {
+                id: lastId, 
+                text: newComment,
+                optimistic: true
+              }
+            ]
     })
 
 
@@ -38,17 +44,24 @@ export const InstagromApp = () => {
       
       addOptimisticComment(messageText)
 
-      //Simular la petición http al servidor 
-        await new Promise( resolve => setTimeout(resolve,3000))
-        console.log('Mensaje grabado');
+      // Definición de acción de useTransition
 
-      //Grabar comentario
-        setComments( comments => [...comments,
-          {
-            id:new Date().getTime(), 
-            text: messageText
-          }
-          ])
+        startTransition(async()=>{
+
+          //Simular la petición http al servidor 
+            await new Promise( resolve => setTimeout(resolve,3000))
+            console.log('Mensaje grabado');
+
+          //Grabar comentario
+            setComments( comments => [...comments,
+              {
+                id:new Date().getTime(), 
+                text: messageText
+              }
+            ])
+        })
+
+
     };
 
   return (
@@ -95,7 +108,7 @@ export const InstagromApp = () => {
         />
         <button
           type="submit"
-          disabled={false}
+          disabled={isPending}
           className="bg-blue-500 text-white p-2 rounded-md w-full"
         >
           Enviar
