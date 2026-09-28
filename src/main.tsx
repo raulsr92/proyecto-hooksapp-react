@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import { StrictMode, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Toaster } from 'sonner'
 //import HooksApp from './HooksApp'
@@ -15,6 +15,7 @@ import { Toaster } from 'sonner'
 
 import './index.css'
 import ClientInformation from './08-use-suspense/ClientInformation'
+import { getUserAction } from './08-use-suspense/api/get-user.action'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -31,7 +32,14 @@ createRoot(document.getElementById('root')!).render(
     {/*<InstagromApp/>*/}
 
     <Toaster/> 
-    <ClientInformation id={1992}/>
+
+    <Suspense fallback={(
+      <div className='bg-gradient flex flex-col gap-4'>
+        <h1 className='text-2xl'>Cargando....</h1>
+      </div>
+    )}>
+      <ClientInformation getUser={getUserAction(192)}/>
+    </Suspense>
 
   </StrictMode>,
 )

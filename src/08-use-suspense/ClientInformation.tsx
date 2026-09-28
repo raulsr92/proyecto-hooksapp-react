@@ -1,10 +1,17 @@
-import { useEffect } from "react"
-import { getUserAction } from "./api/get-user.action"
+import { use, type Usable } from "react"
+import { type User } from "./api/get-user.action"
 
 
+    interface Props{
+        getUser: Usable<User>
+    }
 
+const ClientInformation = ({getUser}:Props) => {
 
-const ClientInformation = async({id}:{id:number}) => {
+    //Uso de use API (Clase 158)
+        //☆☆☆☆☆ Desempaquetar la promesa
+
+            const user = use(getUser);
 
     //useEffect: NO VAMOS A UTILIZAR
     /*
@@ -18,14 +25,9 @@ const ClientInformation = async({id}:{id:number}) => {
 
   return (
     <div className="bg-gradient flex flex-col gap-4">
-        <h2 className="text-4xl font-thin text-white">
-            Raúl - #992
-        </h2>
-
-
-        <p className="text-white text-2xl">Lima, Perú</p>
-        <p className="text-white text-xl">Rol: Administrador</p>
-
+        <h2 className="text-4xl font-thin text-white">{ user.name} - {user.id}</h2>
+        <p className="text-white text-2xl">{user.location}</p>
+        <p className="text-white text-xl">Rol: {user.role}</p>
     </div>
   )
 }
