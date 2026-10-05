@@ -1,5 +1,5 @@
 import {  createContext, useState, type PropsWithChildren } from "react"
-import type { User } from "../data/user-mock.data"
+import { users, type User } from "../data/user-mock.data"
 
 //♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢ Types e Interfaces
 
@@ -22,8 +22,6 @@ export const UserContext = createContext({} as UserContextProps)
 //♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢ Provider - HOC (High Order Component)
 
 const UserContextProvider = ({children}:PropsWithChildren) => {
-    //const[name, setName]=useState('Raúl' )
-    
     //variables de estado
       const [authStatus, setAuthStatus] =  useState<AuthStatus>('checking')
 
@@ -31,13 +29,25 @@ const UserContextProvider = ({children}:PropsWithChildren) => {
 
     //Funciones
       const handleLogin = (userId: number)=>{
-        console.log({userId})
-        return true
+        const user = users.find((user)=> user.id === userId)
+
+        if (!user) {
+          console.log(`User with id ${userId} was not found`)
+          setUser(null)
+          setAuthStatus("not-authenticated")
+          return false
+        }
+        //Si usuario existe....
+
+          setUser(user)
+          setAuthStatus("authenticated")
+          return true
       }
 
       const handleLogout = ()=>{
 
-        console.log("logout....")
+        setAuthStatus("not-authenticated")
+        setUser(null)
 
       }
 
