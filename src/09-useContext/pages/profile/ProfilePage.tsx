@@ -1,13 +1,13 @@
 import { UserContext } from "@/09-useContext/context/UserContext"
 import { Button } from "@/components/ui/button"
-import { use, useContext } from "react"
+import { use } from "react"
 
 const ProfilePage = () => {
 
     //Uso de contexto UserContext
       
     //const {user} = useContext(UserContext)
-    const {user} = use(UserContext)
+    const {user,logout} = use(UserContext)
 
    return (
     <div className="flex flex-col items-center justify-center min-h-screen">
@@ -18,7 +18,12 @@ const ProfilePage = () => {
           { JSON.stringify(user, null, 2)}
         </pre>
 
-          <Button  className="bg-cyan-700 hover:bg-cyan-800 px-10 py-4">Salir</Button>
+          <Button 
+            className="bg-cyan-700 hover:bg-cyan-800 px-10 py-4"
+            onClick={logout}
+            >
+              Salir
+          </Button>
 
     </div>
   )

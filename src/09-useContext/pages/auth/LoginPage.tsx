@@ -22,6 +22,7 @@ const LoginPage = () => {
     console.log(`Usted está buscando al user con id ${+userId}`)
     //Usar propiedad login del contexto
       const result = login(+userId)
+      
       console.log(result)
 
       if (!result) {

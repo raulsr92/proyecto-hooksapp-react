@@ -1,8 +1,7 @@
-import {  createContext, useState, type PropsWithChildren } from "react"
+import {  createContext, useEffect, useState, type PropsWithChildren } from "react"
 import { users, type User } from "../data/user-mock.data"
 
 //♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢ Types e Interfaces
-
 type AuthStatus ='checking'|'authenticated'|'not-authenticated'
 
 interface UserContextProps{
@@ -14,13 +13,11 @@ interface UserContextProps{
     login: (userId: number)=>boolean,
     logout: ()=>void
 }
-
 //♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢ Contexto
 
 export const UserContext = createContext({} as UserContextProps)
 
 //♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢♢ Provider - HOC (High Order Component)
-
 const UserContextProvider = ({children}:PropsWithChildren) => {
     //variables de estado
       const [authStatus, setAuthStatus] =  useState<AuthStatus>('checking')
@@ -41,6 +38,9 @@ const UserContextProvider = ({children}:PropsWithChildren) => {
 
           setUser(user)
           setAuthStatus("authenticated")
+
+          // *****Aquí se debería guardar en Local Storage
+          localStorage.setItem("userId", JSON.stringify(userId))
           return true
       }
 
@@ -49,7 +49,27 @@ const UserContextProvider = ({children}:PropsWithChildren) => {
         setAuthStatus("not-authenticated")
         setUser(null)
 
+        //Remover el ID de localStorage
+
+        localStorage.removeItem("userId")
+
       }
+
+    // Efecto para traer el ID de local storage cuado se recarge (es decir al montar el contexto)
+
+      useEffect(()=>{   
+        
+        const storedUserId = localStorage.getItem("userId")
+        console.log(storedUserId)
+
+        if (storedUserId) {
+          handleLogin(+storedUserId)
+          return
+        }
+
+        handleLogout()
+      },[])
+
 
     return (
       <UserContext value={{
